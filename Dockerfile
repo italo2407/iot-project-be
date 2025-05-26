@@ -8,16 +8,16 @@ WORKDIR /app
 COPY package*.json ./
 
 # Copia el archivo de variables de entorno
-COPY .env ./.env
+#COPY .env ./.env
 
 # Instala las dependencias
-RUN npm install --production
+RUN npm install
 
 # Copia el resto del código fuente
 COPY . .
 
 # Expone el puerto
-EXPOSE 3001
+EXPOSE 8080
 
 # Variable de entorno para producción
 ENV NODE_ENV=production
