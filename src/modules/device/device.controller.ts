@@ -31,24 +31,35 @@ export class DeviceController extends Logger {
   // Event handler for sensor data
   // it is triggered when a message is received on the 'sensor/air-quality' topic
   @EventPattern('sensor/data')
-  handleAirQualitySensor(@Payload() data: DeviceDataDto) {
-    this.log('Received air quality data:', data);
-    this.kafkaService.sendTopic('sensor-data', data);
-    this.deviceService.emitData(data);
+  handleAirQualitySensor(@Payload() data: any) {
+    const parsedData: DeviceDataDto =
+      typeof data === 'string' ? JSON.parse(data) : data;
+    console.log('Received air quality data:', parsedData);
+
+    this.kafkaService.sendTopic('sensor-data', parsedData);
+    this.deviceService.emitData(parsedData);
   }
 
   // Event handler for device status
   // it is triggered when a message is received on the 'sensor/status' topic
-  @EventPattern('sensor/status')
-  async handleDeviceStatus(@Payload() data: SaveDeviceDto) {
-    this.log('Received device status:', data);
-    await this.deviceService.create(data);
+  @EventPattern('sensor/conexion/status')
+  async handleDeviceStatus(@Payload() data: any) {
+    const parsedData: SaveDeviceDto =
+      typeof data === 'string' ? JSON.parse(data) : data;
+
+    console.log('Received device status:', parsedData);
+
+    await this.deviceService.create(parsedData);
   }
 
   @EventPattern('sensor/actuator/status')
-  async handleActuatorsStatus(@Payload() data: DeviceActuatorStatus) {
-    this.log('Received device actuator status:', data);
-    this.deviceService.emitActuatorStatus(data);
+  async handleActuatorsStatus(@Payload() data: any) {
+    const parsedData: DeviceActuatorStatus =
+      typeof data === 'string' ? JSON.parse(data) : data;
+
+    console.log('Received device status:', parsedData);
+
+    this.deviceService.emitActuatorStatus(parsedData);
   }
   /************* End Read mqtt topics *********************/
 
@@ -95,7 +106,7 @@ export class DeviceController extends Logger {
     );
   }
 
-  @Sse('events/actuator-status')
+  @Sse('events/actuators')
   actuatorStatus(): Observable<MessageEvent> {
     return this.deviceService.getActuatorStatusObservable().pipe(
       map((data) => ({
