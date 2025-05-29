@@ -7,6 +7,7 @@ import { MqttModule } from './modules/mqtt/mqtt.module';
 import { MongooseModule } from '@nestjs/mongoose';
 import { DeviceModule } from './modules/device/device.module';
 import { AuthModule } from './modules/auth/auth.module';
+import { LogModule } from './modules/log/log.module';
 
 @Module({
   imports: [
@@ -29,6 +30,7 @@ import { AuthModule } from './modules/auth/auth.module';
     MqttModule,
     DeviceModule,
     AuthModule,
+    LogModule,
   ],
   controllers: [AppController],
   providers: [AppService],

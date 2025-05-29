@@ -33,18 +33,36 @@ export class DeviceService {
     return deviceUpdated;
   }
 
+  async updateDeviceConfig(
+    deviceId: string,
+    config: Partial<{
+      data_sending_interval: number;
+      temp_threshold_max: number;
+      ppm_threshold_max: number;
+    }>,
+  ): Promise<Device | null> {
+    const updatedDevice = await this.deviceModel
+      .findOneAndUpdate(
+        { device_id: deviceId },
+        {
+          $set: {
+            'config.data_sending_interval': config.data_sending_interval,
+            'config.temp_threshold_max': config.temp_threshold_max,
+            'config.ppm_threshold_max': config.ppm_threshold_max,
+          },
+        },
+      )
+      .exec();
+    return updatedDevice;
+  }
+
   async findByDeviceId(deviceId: string): Promise<Device | null> {
     return this.deviceModel.findOne({ device_id: deviceId }).exec();
   }
 
-  async findLatestUniqueDevices(): Promise<Device[]> {
+  async findDevices(): Promise<Device[]> {
     const result: Device[] = await this.deviceModel.aggregate([
       { $sort: { createdAt: -1 } },
-      {
-        $match: {
-          status: 'ON',
-        },
-      },
       {
         $group: {
           _id: '$device_id',
