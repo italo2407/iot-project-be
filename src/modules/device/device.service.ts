@@ -37,6 +37,7 @@ export class DeviceService {
     deviceId: string,
     config: Partial<{
       data_sending_interval: number;
+      check_threshold_interval: number;
       temp_threshold_max: number;
       ppm_threshold_max: number;
     }>,
@@ -47,10 +48,12 @@ export class DeviceService {
         {
           $set: {
             'config.data_sending_interval': config.data_sending_interval,
+            'config.check_threshold_interval': config.check_threshold_interval,
             'config.temp_threshold_max': config.temp_threshold_max,
             'config.ppm_threshold_max': config.ppm_threshold_max,
           },
         },
+        { new: true },
       )
       .exec();
     return updatedDevice;

@@ -170,6 +170,7 @@ export class DeviceController extends Logger {
       deviceId,
       body,
     );
+
     // Publica el comando al topic MQTT correspondiente
     this.mqttService.publish(
       `sensor/${deviceId}/config`,
@@ -179,7 +180,7 @@ export class DeviceController extends Logger {
     await this.logService.createLog({
       type: 'INFO',
       topic: `sensor/${deviceId}/config`,
-      message: `Device ${deviceId} updated with configuration`,
+      message: `Device ${deviceId} updated with configuration sending from web`,
       device_id: deviceId,
       payload: updatedDevice?.config,
     });
