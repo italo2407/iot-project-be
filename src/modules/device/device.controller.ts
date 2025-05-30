@@ -67,7 +67,7 @@ export class DeviceController extends Logger {
     });
 
     if (device.status === 'ON') {
-      if (!device.config) {
+      if (device.config) {
         this.mqttService.publish(
           `sensor/${device.device_id}/config`,
           JSON.stringify(device.config),
